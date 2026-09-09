@@ -3,7 +3,14 @@ const app = express()
 const port = 3000
 
 import { Client } from 'pg'
-const client = await new Client().connect()
+const client = await new Client({
+    host:'localhost',
+    port:'5452',
+    user:'postgres',
+    password:'postgres',
+    database:'aula'
+}
+).connect()
  
 try {
   const res = await client.query('SELECT $1::text as message', ['Hello world!'])
