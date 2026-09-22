@@ -6,25 +6,19 @@ const port = 3000
 
 import { Client } from 'pg'
 const client = await new Client({
-    host:'localhost',
-    port:'5452',
-    user:'postgres',
-    password:'postgres',
-    database:'aula'
+  host: 'localhost',
+  port: '5452',
+  user: 'postgres',
+  password: 'postgres',
+  database: 'aula'
 }
 ).connect()
- 
-try {
-  const res = await client.query('SELECT $1::text as message', ['Hello world!'])
-  console.log(res.rows[0].message) // Hello world!
-} catch (err) {
-  console.error(err)
-} finally {
-  await client.end()
-}
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+app.get('/municipios/:codigo', async (req, res) => {
+  const geojson = await client.query(
+    'select ST_ASGeoJSON(geom) from municipios where id = $1',[req.params.codigo]
+  )
+  res.json(geojson.rows[0])
 })
 
 app.listen(port, () => {
