@@ -34,6 +34,7 @@
 
     <script>
       var map = L.map('map').setView([51.505, -0.09], 13);
+      let jsonLayer = null
 
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -55,6 +56,18 @@
             select.appendChild(option);
           });
         });
+        select.addEventListener('change', ()=>{
+          fetch(`http://localhost:3000/municipios/${select.value}`)
+          .then(response =>(response.json()))
+          .then(data=>{
+            let jsonData = JSON.parse(data.geojson)
+            if(jsonLayer){
+              map.removeLayer(jsonLayer)
+            }
+            jsonLayer = L.geoJson(jsonData).addTo(map)
+            map.fitBounds(jsonLayer.getBounds())
+          })
+        })
     </script>
   </body>
 </html>
