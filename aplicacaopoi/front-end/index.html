@@ -48,6 +48,17 @@
             marker.setLatLng(e.latlng);
         });
 
+        const btnBuscar = document.getElementById('btnBuscar')
+        
+
+        btnBuscar.addEventListener('click', async()=>{
+            let localBuscar = document.getElementById('localBuscar').value
+            fetch(`https://nominatim.openstreetmap.org/search?q=${localBuscar}&format=json`)
+            .then(response => response.json())
+            .then(data =>{
+                console.log(data)
+            })
+        })
     </script>
 </body>
 
