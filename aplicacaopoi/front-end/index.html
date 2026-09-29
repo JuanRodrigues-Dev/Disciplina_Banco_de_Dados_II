@@ -24,6 +24,17 @@
         <button id="btnBuscar">Buscar</button>
     </div>
     <div id="map"></div>
+    <div id="form">
+        <input type="text" id="campoNome" placeholder="Informe o nome">
+        <input type="text" id="campoDescricao" placeholder="Informe a descricao">
+        <select  id="campoTipo">
+            <option value="Educação">Educação</option>
+            <option value="Lazer">Lazer</option>
+            <option value="Saúde">Saúde</option>
+            <option value="Trabalho">Trabalho</option>
+        </select>
+        <button id="btnSalvar">Salvar</button>
+    </div>
     <script>
         let center = [-6.8863, -38.5559];
         var map = L.map('map').setView(center, 14);
@@ -56,7 +67,14 @@
             fetch(`https://nominatim.openstreetmap.org/search?q=${localBuscar}&format=json`)
             .then(response => response.json())
             .then(data =>{
-                console.log(data)
+                if(data.length > 0){
+                    const lat = data[0].lat
+                    const lon = data[0].lon
+                    map.setView([lat, lon],14)
+                    marker.setLatLng([lat,lon])
+               }else{
+                alert('Local Não Encontrado')
+               }
             })
         })
     </script>
