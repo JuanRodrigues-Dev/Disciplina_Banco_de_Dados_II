@@ -29,3 +29,5 @@ const Poi = sequelize.define(
 );
 
 Poi.sync();
+
+export default Poi;
