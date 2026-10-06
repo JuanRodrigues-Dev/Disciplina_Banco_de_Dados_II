@@ -9,3 +9,4 @@ export async function createPoi(req,res){
     const poi = await Poi.create(req.body)
     res.status(201).json(poi)
 }
+

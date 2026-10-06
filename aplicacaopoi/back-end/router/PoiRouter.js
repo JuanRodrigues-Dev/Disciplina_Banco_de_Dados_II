@@ -1,6 +1,10 @@
 import express from "express"
+import { getPois, createPoi } from "../controller/PoiController.js"
 
 const PoiRouter = express.Router()
+
+PoiRouter.get('/',getPois)
+PoiRouter.post('/',createPoi)
 
 PoiRouter.get('/', (req, res) => {
     console.log('GET')
