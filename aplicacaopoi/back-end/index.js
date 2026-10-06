@@ -1,28 +1,31 @@
-import {Sequelize}from "sequelize"
-import dotenv from "dotenv"
+import sequelize from
+  './database/sequelize.js';
+import { DataTypes } from 'sequelize';
 
-dotenv.config();
-
-const sequelize = new Sequelize(
-    process.env.PG_DATABASE,
-    process.env.PG_USER,
-    process.env.PG_PASSWORD,
-    {
-        host: process.env.PG_HOST,
-        port: Number(process.env.PG_PORT),
-        dialect: "postgres",
-        dialectOptions: {
-            ssl: {
-                require: true,
-                rejectUnauthorized: false
-            }
-        }
+const Poi = sequelize.define(
+  'Poi',{
+    nome:{
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    descricao:{
+      type: DataTypes.STRING
+    },
+    tipo:{
+      type: DataTypes.STRING,
+      enum: ['Educação', 'Lazer', 'Saúde', 
+        'Trabalho']
+    },
+    localizacao:{
+      type: DataTypes.GEOMETRY('POINT'),
+      allowNull: false
+    },
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
     }
-)
+  }
+);
 
-try {
-  await sequelize.authenticate();
-  console.log('Connection has been established successfully.');
-} catch (error) {
-  console.error('Unable to connect to the database:', error);
-}
+Poi.sync();
