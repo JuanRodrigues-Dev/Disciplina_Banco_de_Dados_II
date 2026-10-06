@@ -1,28 +1,18 @@
-import {Sequelize}from "sequelize"
+import express from "express"
+import cors from "cors"
 import dotenv from "dotenv"
+dotenv.config()
+const port = process.env.API_PORT || 3000
 
-dotenv.config();
+import PoiRouter from "./router/PoiRouter.js"
 
-const sequelize = new Sequelize(
-    process.env.PG_DATABASE,
-    process.env.PG_USER,
-    process.env.PG_PASSWORD,
-    {
-        host: process.env.PG_HOST,
-        port: Number(process.env.PG_PORT),
-        dialect: "postgres",
-        dialectOptions: {
-            ssl: {
-                require: true,
-                rejectUnauthorized: false
-            }
-        }
-    }
-)
+const app = express()
+app.use(cors())
+app.use(express.json())
 
-try {
-  await sequelize.authenticate();
-  console.log('Connection has been established successfully.');
-} catch (error) {
-  console.error('Unable to connect to the database:', error);
-}
+app.use('/pois', PoiRouter)
+
+
+app.listen(port,()=>{
+    console.log(`Server rodando na porta ${port}`)
+})
