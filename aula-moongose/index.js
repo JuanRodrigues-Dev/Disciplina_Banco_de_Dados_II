@@ -1,14 +1,22 @@
-import dotenv from 'dotenv'
-dotenv.config()
+import dotenv from 'dotenv';
+dotenv.config();
 import mongoose from 'mongoose';
 
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('Conectado no MongoDB'))
+    .catch(err => console.log(err));
 
-const uri = process.env.MONGO_URI;
+const UsuarioSchema = mongoose.Schema({
+    nome:String,
+    email:{
+        type:String,
+        required:true,
+        unique:true
+    }
+});
+const Usuario = mongoose.model('Usuario', UsuarioSchema);
 
-mongoose.connect(uri)
-    .then(() => {
-        console.log('Conectado ao MongoDB com sucessosss!');
-    })
-    .catch((err) => {
-        console.error('Erro ao conectar ao MongoDB:sss', err.message);
-    });
+Usuario.insertOne({nome:"José", 
+    email:"jose@gmail.com"})
+    .then(()=> console.log('Salvo com sucesso'))
+    .catch(err => console.log(err));
