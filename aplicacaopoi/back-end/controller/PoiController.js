@@ -1,22 +1,49 @@
 import Poi from "../model/Poi.js";
 
 export async function getPois(req,res){
-    try{
-        const pois = await Poi.findAll()
-        res.json(pois)
-    }catch(error){
-        res.status(400).json(error)
-    }
-    
+    const pois = await Poi.find();
+    res.json(pois);
+}
+
+export async function getPoiByText(req, res){
+    const pois = await Poi.find(
+        {$text:{$search: req.params.text}});
+    res.json(pois);
 }
 
 export async function createPoi(req,res){
-    try{
-    const poi = await Poi.create(req.body)
-    res.status(201).json(poi)
-    }catch(error){
-         res.status(400).json(error)
+    const user = await Poi.insertOne(req.body);
+    if(user){
+        res.status(201).json(user);
+        return;
     }
-    
+    res.status(400).json({ message: "Erro ao criar Poi" });
 }
 
+export async function deletePoi(req,res){
+    const user = await Poi.deleteOne({_id: req.params.id});
+    if(user.deletedCount>0){
+        res.status(200).json({
+            mensagem:'Deletado com sucesso'
+        });
+        return;
+    }
+    res.status(400).json({
+        mensagem:'usuário não encontrado'
+    });
+}
+
+export async function updatePoi(req,res){
+    const user = await Poi.updateOne({_id: req.params.id},
+        {$set: req.body}
+    );
+    if(user.modifiedCount>0){
+        res.json({
+            mensagem:"Modificado com sucesso"
+        });
+        return;
+    }
+    res.status(400).json({
+        mensagem: "Usuário não encontrado"
+    })
+}
